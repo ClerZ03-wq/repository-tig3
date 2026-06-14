@@ -4,20 +4,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page ni Clerwin</title>
+    <style>
+        /* Base Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Dark Night Sky Background */
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            overflow: hidden;
+            position: relative;
+            color: #fff;
+        }
+
+        /* Container for Meteors */
+        #meteor-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        /* Meteor Styling */
+        .meteor {
+            position: absolute;
+            width: 150px;
+            height: 2px;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 100%);
+            transform: rotate(-45deg);
+            animation: meteor-fall linear infinite;
+            opacity: 0;
+        }
+
+        /* The glowing head of the meteor */
+        .meteor::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -2px;
+            width: 6px;
+            height: 6px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px 3px #fff;
+        }
+
+        /* Meteor Animation Keyframes */
+        @keyframes meteor-fall {
+            0% {
+                transform: rotate(-45deg) translateX(-300px);
+                opacity: 1;
+            }
+            70% {
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(-45deg) translateX(100vw);
+                opacity: 0;
+            }
+        }
+
+        /* Glassmorphism Login Container */
+        .login-box {
+            position: relative;
+            z-index: 1;
+            width: 350px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        .login-box h1 {
+            margin-bottom: 30px;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Input Fields */
+        .input-group {
+            position: relative;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 0;
+            font-size: 16px;
+            color: #fff;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group label {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+            transition: 0.3s ease all;
+        }
+
+        /* Floating Label Animation */
+        .input-group input:focus ~ label,
+        .input-group input:valid ~ label {
+            top: -20px;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .input-group input:focus {
+            border-bottom: 2px solid #fff;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #090a0f;
+            background: #fff;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+    </style>
 </head>
-<body style="background-color: #c77171; font-family: Arial, sans-serif;">
-    <div style="text-align: center; margin:auto; width: 300px; margin-top: 240px; background-color: #f0f0f0; padding: 20px; border-radius: 10px;">
-        <h1 style="color: black; font-size: 24px; font-family: Arial, sans-serif;">Login Page ni Clerwin</h1>
+<body>
+
+    <div id="meteor-container"></div>
+
+    <div class="login-box">
+        <h1>Login </h1>
         <form action="submit_login.php" method="POST">
-            <label for="username" style="font-family: Arial, sans-serif;">Username:</label>
-            <input type="text" id="username" name="username" required><br><br>
+            <div class="input-group">
+                <input type="text" id="username" name="username" required autocomplete="off">
+                <label for="username">Username</label>
+            </div>
             
-            <label for="password" style="font-family: Arial, sans-serif;">Password:</label>
-            <input type="password" id="password" name="password" required><br><br>
+            <div class="input-group">
+                <input type="password" id="password" name="password" required>
+                <label for="password">Password</label>
+            </div>
             
-            <input type="submit" value="Login">
+            <button type="submit" class="submit-btn">Login</button>
         </form>
     </div>
-    
+
+    <script>
+        // JavaScript to randomly generate meteors so the HTML stays clean
+        function createMeteors() {
+            const container = document.getElementById('meteor-container');
+            const meteorCount = 15; // Number of meteors on screen
+
+            for (let i = 0; i < meteorCount; i++) {
+                const meteor = document.createElement('div');
+                meteor.classList.add('meteor');
+
+                // Randomize starting positions, animation duration, and delay
+                const topPos = Math.random() * 100 - 50; // Start higher up
+                const leftPos = Math.random() * 100; // Anywhere horizontally
+                const duration = Math.random() * 2 + 2; // 2s to 4s speed
+                const delay = Math.random() * 5; // Up to 5s delay
+
+                meteor.style.top = topPos + 'vh';
+                meteor.style.left = leftPos + 'vw';
+                meteor.style.animationDuration = duration + 's';
+                meteor.style.animationDelay = delay + 's';
+
+                container.appendChild(meteor);
+            }
+        }
+
+        // Run the function when the page loads
+        window.onload = createMeteors;
+    </script>
 </body>
 </html>
